@@ -31,12 +31,12 @@ formReg.addEventListener('click', (event) => {
             userEmailError.style.display = 'none';
         }
 
-        if (!userPassword.value) {
-            checkValidation(userPassword, userPassError)
+        if (!userPassword.value || userPassword.value.length < 8) {
+            checkValidation(userPassword, userPassError);
             valid = false;
         } else {
-            userPassError.textContent = ''
-            userPassError.style.display = 'none'
+            userPassError.textContent = '';
+            userPassError.style.display = 'none';
         }
        
         if (!confirmPassword.value || userPassword.value !== confirmPassword.value) {
@@ -48,6 +48,8 @@ formReg.addEventListener('click', (event) => {
         }
         if (valid) {
             localDB.push(`{'name':${userName.value}, 'email': ${userEmail.value}, 'password': ${userPassword.value}}`)
+            const saveLocal = JSON.stringify(`{'name':${userName.value}, 'email': ${userEmail.value}, 'password': ${userPassword.value}}`)
+            localStorage.setItem('userForm', saveLocal)
             cleanUp()
         }
         console.log('localDB ' + localDB)
@@ -56,18 +58,15 @@ formReg.addEventListener('click', (event) => {
 function validateEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
-function displayErrorMessage(){
 
-}
 function checkValidation(inputElement, errorElement) {
     let message = inputElement.validationMessage;
-    
     if (inputElement.validity.valueMissing) {
         message = 'This field is required';
     } else if (inputElement.type === 'email' && inputElement.value && !validateEmail(inputElement.value)) {
         message = 'Please enter a valid email address.';
-    } else if (inputElement.validity.tooShort) {
-        message = `Password must be at least ${inputElement.minLength} characters long.`;
+    } else if (inputElement.id === 'password' && inputElement.value.length > 0 && inputElement.value.length < 8) {
+        message = 'Password must be at least 8 characters long.';
     } else if (inputElement.id === 'confirmPassword' && inputElement.value !== userPassword.value) {
         message = 'Passwords do not match';
     }
