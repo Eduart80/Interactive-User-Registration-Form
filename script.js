@@ -47,11 +47,16 @@ formReg.addEventListener('click', (event) => {
             confPassError.style.display = 'none'
         }
         if (valid) {
+            try{
             // localDB.push(`{'name':${userName.value}, 'email': ${userEmail.value}, 'password': ${userPassword.value}}`)
             const saveLocal = JSON.stringify(`{'name':${userName.value}, 'email': ${userEmail.value}, 'password': ${userPassword.value}}`)
             localStorage.setItem('userForm', saveLocal)
             alert(`Welcome to our Blog ${userName.value}!`)
             cleanUp()
+            }catch(e){
+                console.log('Local storage reading error: '+ e.message);
+                
+            }
         }
     }
 })
